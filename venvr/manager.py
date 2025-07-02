@@ -9,7 +9,8 @@ class Manager(Loggy):
 	def subsig(self):
 		return self.vstore
 
-	def agent(self, name, deps=[]):
+	def agent(self, name, deps=[], persistent=True):
 		if name not in self.venvrs:
-			self.venvrs[name] = Agent(name, self.vstore, deps)
+			self.log("delegating agent", name)
+			self.venvrs[name] = Agent(name, self.vstore, deps, persistent)
 		return self.venvrs[name]

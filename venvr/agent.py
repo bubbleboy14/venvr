@@ -5,10 +5,13 @@ from .runner import Runner
 from .builder import Builder
 
 class Agent(Named):
-	def __init__(self, name, vstore, deps=[]):
+	def __init__(self, name, vstore, deps=[], persistent=True):
 		self.name = name
-		self.vstore = vstore
-		self.deps = deps
+		self.config = Config({
+			"deps": deps,
+			"vstore": vstore,
+			"persistent": persistent
+		})
 		self.setup()
 
 	def run(self, funcname, *args, **kwargs):
@@ -23,16 +26,16 @@ class Agent(Named):
 	def setup(self):
 		self.log("setup")
 		self.setpaths()
-		self.runner = Runner(self.name, self.path)
-		self.builder = Builder(self.name, self.path, self.deps)
-		isdir(self.path.base) or self.builder.build()
+		self.runner = Runner(self.name, self.config)
+		self.builder = Builder(self.name, self.config)
+		isdir(self.config.path.base) or self.builder.build()
 
 	def setpaths(self):
-		base = pjoin(self.vstore, self.name)
+		base = pjoin(self.config.vstore, self.name)
 		self.log("setpaths", base)
 		venv = pjoin(base, "venv")
 		binp = pjoin(venv, "bin")
-		self.path = Config({
+		self.config.update("path", {
 			"base": base,
 			"venv": venv,
 			"pip": pjoin(binp, "pip"),

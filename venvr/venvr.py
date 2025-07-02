@@ -14,8 +14,8 @@ def getman():
 		manny = Manager(vstore)
 	return manny
 
-def getagent(name, deps=[]):
-	return getman().agent(name, deps)
+def getagent(name, deps=[], persistent=True):
+	return getman().agent(name, deps, persistent)
 
 def run(envname, deps, func, *args, **kwargs):
 	agent = getagent(envname, deps)

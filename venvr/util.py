@@ -18,4 +18,4 @@ class Basic(Named):
 		return out
 
 	def based(self, fname):
-		return os.path.join(self.path.base, fname)
+		return os.path.join(self.config.path.base, fname)
