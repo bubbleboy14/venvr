@@ -5,22 +5,48 @@ from .runner import Runner
 from .builder import Builder
 
 class Agent(Named):
-	def __init__(self, name, vstore, deps=[], persistent=True):
+	def __init__(self, name, vstore, deps=[], persistent=True, port=None):
 		self.name = name
+		if persistent:
+			self.log("adding dez dependency for persistent mode")
+			deps.append("dez")
 		self.config = Config({
 			"deps": deps,
+			"running": {},
+			"registered": {},
+			"nextport": port,
 			"vstore": vstore,
 			"persistent": persistent
 		})
 		self.setup()
 
-	def run(self, funcname, *args, **kwargs):
-		self.log("run", funcname, args, kwargs)
-		return self.runner.run(funcname, *args, **kwargs)
+	def getport(self):
+		cfg = self.config
+		if not cfg.persistent:
+			return
+		np = cfg.nextport
+		cfg.update("nextport", cfg.nextport + 1)
+		self.log("getport", np)
+		return np
+
+	def start(self, fname):
+		cfg = self.config
+		port = cfg.registered[fname]
+		self.log("starting", fname, port)
+		cfg.running.update(fname, True)
+		self.runner.start(fname, port)
+
+	def run(self, fname, *args, **kwargs):
+		self.log("run", fname, args, kwargs)
+		if self.config.persistent and not self.config.running[fname]:
+			self.start(fname)
+		return self.runner.run(fname, *args, **kwargs)
 
 	def register(self, func):
-		name = self.builder.register(func)
-		self.log("register", name)
+		port = self.getport()
+		name = self.builder.register(func, port)
+		self.log("registered", name, port)
+		self.config.registered.update(name, port)
 		return name
 
 	def setup(self):

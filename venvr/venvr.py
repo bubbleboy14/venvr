@@ -1,17 +1,11 @@
 from .manager import Manager
 
-vstore = "venvrs"
 manny = None
-
-def setvstore(vs):
-	global vstore
-	vstore = vs
-	print("set vstore to", vs)
 
 def getman():
 	global manny
 	if not manny:
-		manny = Manager(vstore)
+		manny = Manager()
 	return manny
 
 def getagent(name, deps=[], persistent=True):

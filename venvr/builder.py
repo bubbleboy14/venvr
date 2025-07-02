@@ -1,5 +1,5 @@
 import os, inspect
-from .util import Basic, RTMP
+from .util import Basic, RTMP, PTMP
 
 class Builder(Basic):
 	def __init__(self, name, config):
@@ -28,13 +28,18 @@ class Builder(Basic):
 		for dep in deps:
 			self.out("%s install %s"%(self.config.path.pip, dep))
 
-	def register(self, func):
+	def register(self, func, port):
+		cfg = self.config
 		fsrc = inspect.getsource(func)
 		name = fsrc.split(" ", 1).pop(1).split("(", 1).pop(0)
 		rp = self.based("%s.py"%(name,))
-		self.config.path.run.update(name, rp)
+		cfg.path.run.update(name, rp)
 		caller = fsrc.startswith("class") and "%s()"%(name,) or name
 		self.log("register", caller, rp)
+		codestring = (cfg.persistent and PTMP or RTMP)%(fsrc, caller)
+		if cfg.persistent:
+			codestring = codestring.replace("PID", os.getpid())
+			codestring = codestring.replace("PORT", port)
 		with open(rp, "w") as f:
-			f.write(RTMP%(fsrc, caller))
+			f.write(codestring)
 		return name

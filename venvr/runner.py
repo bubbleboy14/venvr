@@ -1,3 +1,4 @@
+import requests
 from .util import Basic
 
 class Runner(Basic):
@@ -5,9 +6,28 @@ class Runner(Basic):
 		self.name = name
 		self.config = config
 
-	def run(self, func, *args, **kwargs):
+	def runner(self, fname, args=[], noblock=False):
 		path = self.config.path
-		rp = path.run[func]
-		self.log("run", rp, *args, **kwargs)
-		return self.out("%s %s %s"%(path.py, rp,
-			" ".join(['"%s"'%(a,) for a in args])))
+		rstr = "%s %s"%(path.py, path.run[fname])
+		if args:
+			rstr = "%s %s"%(rstr, " ".join(['"%s"'%(a,) for a in args]))
+		if noblock:
+			rstr = "%s&"%(rstr,)
+		return self.out(rstr)
+
+	def start(self, fname, port):
+		self.log("start", fname, port)
+		self.runner(fname)
+
+	def run(self, fname, *args, **kwargs):
+		cfg = self.config
+		self.log("run", *args, **kwargs)
+		if cfg.persistent: # TODO return response
+			self.log("persistent (via post)")
+			self.log(requests.post("http://localhost:%s/"%(cfg.registered[fname],), json={
+				"args": args,
+				"kwargs": kwargs
+			}))
+		else:
+			self.log("single (dropping kwargs)", *args)
+			return self.runner(fname, args)
