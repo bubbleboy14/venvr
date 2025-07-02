@@ -32,7 +32,8 @@ class Builder(Basic):
 		name = fsrc.split(" ", 1).pop(1).split("(", 1).pop(0)
 		rp = self.based("%s.py"%(name,))
 		self.path.run.update(name, rp)
-		self.log("register", name, rp)
+		caller = fsrc.startswith("class") and "%s()"%(name,) or name
+		self.log("register", caller, rp)
 		with open(rp, "w") as f:
-			f.write(RTMP%(fsrc, name))
+			f.write(RTMP%(fsrc, caller))
 		return name
