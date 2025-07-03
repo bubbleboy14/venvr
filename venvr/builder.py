@@ -39,8 +39,8 @@ class Builder(Basic):
 		name = fsrc.split(" ", 1).pop(1).split("(", 1).pop(0)
 		rp = self.based("%s.py"%(name,))
 		cfg.path.run.update(name, rp)
-		caller = fsrc.startswith("class") and "%s()"%(name,) or name
-		self.log("register", caller, rp)
+		caller = fsrc.startswith("class") and "%s(log)"%(name,) or name
+		self.log("register", name, rp)
 		codestring = (cfg.persistent and PTMP or RTMP)%(fsrc, caller)
 		if cfg.persistent:
 			codestring = codestring.replace("PID", str(os.getpid()))

@@ -9,19 +9,19 @@ PTMP = """import json, rel
 from subprocess import getoutput
 from dez.http.application import HTTPApplication
 
-%s
-caller = %s
-
 def log(*msgs):
 	print("venvr bridge", *msgs)
 	with open("venvr.log", "a") as f:
 		f.write(" ".join([str(m) for m in msgs]))
 
+%s
+caller = %s
+
 def call(req):
 	d = json.loads(req.body)
 	log("calling with", d["args"], d["kwargs"])
 	caller(*d["args"], **d["kwargs"])
-	req.write("HTTP/1.0 200 OK\\r\\n\\r\\nSuccess\\r\\n")
+	req.write("HTTP/1.0 200 OK\\r\\n\\r\\nSuccess")
 	req.close()
 
 def pcheck():
