@@ -12,7 +12,7 @@ from dez.http.application import HTTPApplication
 def log(*msgs):
 	print("venvr bridge", *msgs)
 	with open("venvr.log", "a") as f:
-		f.write(" ".join([str(m) for m in msgs]))
+		f.write(" ".join([str(m) for m in msgs]) + "\\n")
 
 %s
 caller = %s
