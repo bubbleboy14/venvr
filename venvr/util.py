@@ -1,6 +1,6 @@
 import os, sys
 from fyg.util import Named
-from subprocess import getoutput
+from subprocess import getoutput, call
 
 def log(*msg):
 	print("venvr", *msg)
@@ -10,8 +10,10 @@ def err(*msg):
 	sys.exit()
 
 class Basic(Named):
-	def out(self, cmd):
+	def out(self, cmd, background=False):
 		self.log("out", cmd)
+		if background:
+			return call("%s &"%(cmd,), shell=True)
 		out = getoutput(cmd)
 		self.log(out)
 		return out
