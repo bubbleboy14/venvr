@@ -11,9 +11,7 @@ class Runner(Basic):
 		rstr = "%s %s"%(path.py, path.run[fname])
 		if args:
 			rstr = "%s %s"%(rstr, " ".join(['"%s"'%(a,) for a in args]))
-		if noblock:
-			rstr = "%s&"%(rstr,)
-		return self.out(rstr)
+		return self.out(rstr, noblock)
 
 	def start(self, fname, port):
 		self.log("start", fname, port)
