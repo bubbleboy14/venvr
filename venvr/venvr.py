@@ -18,7 +18,7 @@ def run(envname, deps, func, *args, **kwargs):
 	return agent.run(func, *args, **kwargs)
 
 def call(envname, func, *args, **kwargs):
-	return getagent(envname).run(func, *args, **kwargs)
+	return getagent(envname, persistent=False).run(func, *args, **kwargs)
 
 def install(envname, pname):
 	getagent(envname).builder.install(pname)
