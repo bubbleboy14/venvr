@@ -1,4 +1,5 @@
 from os.path import isdir
+from time import sleep
 from fyg import Config
 from .util import Basic
 from .runner import Runner
@@ -40,6 +41,8 @@ class Agent(Basic):
 		self.log("run", fname, args, kwargs)
 		if self.config.persistent and not self.config.running[fname]:
 			self.start(fname)
+			self.log("waiting 1/2 sec for initialization")
+			sleep(0.5)
 		return self.runner.run(fname, *args, **kwargs)
 
 	def register(self, func):
