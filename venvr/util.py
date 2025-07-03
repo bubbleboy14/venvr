@@ -1,4 +1,4 @@
-import os
+import os, sys
 from fyg.util import Named
 from subprocess import getoutput
 
@@ -39,6 +39,13 @@ app.add_cb_rule("/", call)
 rel.timeout(5, pcheck)
 log("starting")
 app.start()"""
+
+def log(*msg):
+	print("venvr", *msg)
+
+def err(*msg):
+	log("error!", *msg)
+	sys.exit()
 
 class Basic(Named):
 	def out(self, cmd):
