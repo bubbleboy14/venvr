@@ -21,8 +21,7 @@ def call(req):
 	d = json.loads(req.body)
 	log("calling with", d["args"], d["kwargs"])
 	caller(*d["args"], **d["kwargs"])
-	req.write("HTTP/1.0 200 OK\\r\\n\\r\\nSuccess")
-	req.close()
+	app.daemon.respond(req)
 
 def pcheck():
 	if not getoutput("ps -ef | grep PID | grep -v grep"):
