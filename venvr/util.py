@@ -47,5 +47,5 @@ class Basic(Named):
 		self.log(out)
 		return out
 
-	def based(self, fname):
-		return os.path.join(self.config.path.base, fname)
+	def based(self, fname, base=None):
+		return os.path.join(base or self.config.path.base, fname)

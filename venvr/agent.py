@@ -1,10 +1,10 @@
-from os.path import isdir, join as pjoin
+from os.path import isdir
 from fyg import Config
-from fyg.util import Named
+from .util import Basic
 from .runner import Runner
 from .builder import Builder
 
-class Agent(Named):
+class Agent(Basic):
 	def __init__(self, name, vstore, deps=[], persistent=True, port=None):
 		self.name = name
 		if persistent:
@@ -49,6 +49,10 @@ class Agent(Named):
 		self.config.registered.update(name, port)
 		return name
 
+	def profile(self):
+		self.log("profile")
+		self.out("ls %s"%(self.config.path.base,))
+
 	def setup(self):
 		self.log("setup")
 		self.setpaths()
@@ -57,14 +61,14 @@ class Agent(Named):
 		isdir(self.config.path.base) or self.builder.build()
 
 	def setpaths(self):
-		base = pjoin(self.config.vstore, self.name)
+		base = self.based(self.name, self.config.vstore)
 		self.log("setpaths", base)
-		venv = pjoin(base, "venv")
-		binp = pjoin(venv, "bin")
+		venv = self.based("venv", base)
+		binp = self.based("bin", venv)
 		self.config.update("path", {
+			"run": {},
 			"base": base,
 			"venv": venv,
-			"pip": pjoin(binp, "pip"),
-			"py": pjoin(binp, "python"),
-			"run": {}
+			"pip": self.based("pip", binp),
+			"py": self.based("python", binp)
 		})

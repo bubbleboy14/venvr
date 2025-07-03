@@ -17,7 +17,7 @@ class Runner(Basic):
 
 	def start(self, fname, port):
 		self.log("start", fname, port)
-		self.runner(fname)
+		self.runner(fname, noblock=True)
 
 	def run(self, fname, *args, **kwargs):
 		cfg = self.config

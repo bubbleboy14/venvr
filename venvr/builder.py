@@ -26,7 +26,11 @@ class Builder(Basic):
 		deps = self.config.deps
 		self.log("deps", *deps)
 		for dep in deps:
-			self.out("%s install %s"%(self.config.path.pip, dep))
+			self.install(dep)
+
+	def install(self, pname):
+		self.log("install", pname)
+		self.out("%s install %s"%(self.config.path.pip, pname))
 
 	def register(self, func, port):
 		cfg = self.config

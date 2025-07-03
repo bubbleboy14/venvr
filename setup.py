@@ -15,7 +15,10 @@ setup(
     install_requires = [
         "fyg >= 0.1.6"
     ],
-    entry_points = '''''',
+    entry_points = '''
+        [console_scripts]
+        venvr = venvr:invoke
+    ''',
     classifiers = [
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

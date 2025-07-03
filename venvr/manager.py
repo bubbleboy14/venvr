@@ -1,15 +1,12 @@
-from fyg.util import Loggy
+from .util import Basic
 from .agent import Agent
 from .config import config, getPortBlock
 
-class Manager(Loggy):
+class Manager(Basic):
 	def __init__(self, vstore=None):
-		self.vstore = vstore or config.vstore
+		self.name = vstore or config.vstore
 		self.nextPort = getPortBlock()
 		self.venvrs = {} # detect?
-
-	def subsig(self):
-		return self.vstore
 
 	def getport(self):
 		np = self.nextPort
@@ -18,9 +15,13 @@ class Manager(Loggy):
 		self.nextPort += pslice
 		return np
 
+	def profile(self):
+		self.log("profile")
+		self.out("ls %s"%(self.name,))
+
 	def agent(self, name, deps=[], persistent=True):
 		if name not in self.venvrs:
 			self.log("delegating agent", name)
-			self.venvrs[name] = Agent(name, self.vstore, deps,
+			self.venvrs[name] = Agent(name, self.name, deps,
 				persistent, persistent and self.getport())
 		return self.venvrs[name]
