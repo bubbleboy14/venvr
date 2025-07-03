@@ -2,44 +2,6 @@ import os, sys
 from fyg.util import Named
 from subprocess import getoutput
 
-RTMP = """from optparse import OptionParser
-parser = OptionParser("run.py [arg1] [arg2] ...")
-args = parser.parse_args()[1]
-
-%s
-%s(*args)"""
-
-PTMP = """import json, rel
-from subprocess import getoutput
-from dez.http.application import HTTPApplication
-
-%s
-caller = %s
-
-def log(*msgs):
-	print("venvr bridge", *msgs)
-	with open("venvr.log", "a") as f:
-		f.write(" ".join([str(m) for m in msgs]))
-
-def call(req):
-	d = json.loads(req.body)
-	log("calling with", d["args"], d["kwargs"])
-	caller(*d["args"], **d["kwargs"])
-    req.write("HTTP/1.0 200 OK\r\n\r\nSuccess\n")
-    req.close()
-
-def pcheck():
-	if not getoutput("ps -ef | grep PID | grep -v grep"):
-		log("parent process ended - quitting")
-		app.stop()
-	return True
-
-app = HTTPApplication("", PORT)
-app.add_cb_rule("/", call)
-rel.timeout(5, pcheck)
-log("starting")
-app.start()"""
-
 def log(*msg):
 	print("venvr", *msg)
 

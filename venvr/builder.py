@@ -1,5 +1,6 @@
 import os, inspect
-from .util import Basic, RTMP, PTMP
+from .util import Basic
+from .templates import RTMP, PTMP
 
 class Builder(Basic):
 	def __init__(self, name, config):
