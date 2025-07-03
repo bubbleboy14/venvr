@@ -42,8 +42,8 @@ class Builder(Basic):
 		self.log("register", caller, rp)
 		codestring = (cfg.persistent and PTMP or RTMP)%(fsrc, caller)
 		if cfg.persistent:
-			codestring = codestring.replace("PID", os.getpid())
-			codestring = codestring.replace("PORT", port)
+			codestring = codestring.replace("PID", str(os.getpid()))
+			codestring = codestring.replace("PORT", str(port))
 		with open(rp, "w") as f:
 			f.write(codestring)
 		return name
