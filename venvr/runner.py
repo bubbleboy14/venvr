@@ -20,12 +20,14 @@ class Runner(Basic):
 	def run(self, fname, *args, **kwargs):
 		cfg = self.config
 		self.log("run", *args, **kwargs)
-		if cfg.persistent: # TODO return response
+		if cfg.persistent:
 			self.log("persistent (via post)")
-			self.log(requests.post("http://localhost:%s/"%(cfg.registered[fname],), json={
+			resp = requests.post("http://localhost:%s/"%(cfg.registered[fname],), json={
 				"args": args,
 				"kwargs": kwargs
-			}))
+			}).content.decode()
+			self.log(resp)
+			return resp
 		else:
 			self.log("single (dropping kwargs)", *args)
 			return self.runner(fname, args)
