@@ -29,9 +29,21 @@ class Builder(Basic):
 		for dep in deps:
 			self.install(dep)
 
-	def install(self, pname):
-		self.log("install", pname)
-		self.out("%s install %s"%(self.config.path.pip, pname))
+	def install(self, package):
+		self.log("install", package)
+		path = self.config.path
+		pipper = path.pip
+		if type(package) is str:
+			return self.out("%s install %s"%(pipper, package))
+		# git installation
+		gp = package["git"]
+		pjoin = os.path.join
+		gdir = gp.split("/").pop()
+		os.chdir(path.base)
+		self.out("git clone https://github.com/%s.git"%(gp,))
+		self.out("ln -s %s"%(pjoin(gdir, package["sym"]),))
+		os.chdir(pjoin("..", ".."))
+		self.out("%s install -r %s"%(pipper, pjoin(path.base, gdir, package["requirements"])))
 
 	def register(self, func, port):
 		cfg = self.config
