@@ -6,12 +6,13 @@ from .runner import Runner
 from .builder import Builder
 
 class Agent(Basic):
-	def __init__(self, name, vstore, deps=[], persistent=True, port=None):
+	def __init__(self, name, vstore, deps=[], py="python3", persistent=True, port=None):
 		self.name = name
 		if persistent:
 			self.log("adding dez dependency for persistent mode")
 			deps.append("dez")
 		self.config = Config({
+			"py": py,
 			"deps": deps,
 			"running": {},
 			"registered": {},
