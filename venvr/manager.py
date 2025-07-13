@@ -19,9 +19,9 @@ class Manager(Basic):
 		self.log("profile")
 		self.out("ls %s"%(self.name,))
 
-	def agent(self, name, deps=[], persistent=True):
+	def agent(self, name, deps=[], py="python3", persistent=True):
 		if name not in self.venvrs:
 			self.log("delegating agent", name)
 			self.venvrs[name] = Agent(name, self.name, deps,
-				persistent, persistent and self.getport())
+				py, persistent, persistent and self.getport())
 		return self.venvrs[name]

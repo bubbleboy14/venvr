@@ -29,6 +29,12 @@ def pcheck():
 		app.stop()
 	return True
 
+if WITHPATH:
+	import os, sys
+	callerpath = os.path.abspath(".")
+	log("adding", callerpath, "to path")
+	sys.path.insert(0, callerpath)
+
 app = HTTPApplication("", PORT)
 app.add_cb_rule("/", call)
 rel.timeout(5, pcheck)

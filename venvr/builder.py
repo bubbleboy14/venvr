@@ -19,9 +19,10 @@ class Builder(Basic):
 		os.makedirs(bp)
 
 	def env(self):
+		py = self.config.py
 		vp = self.config.path.venv
-		self.log("env", vp)
-		self.out("python3 -m venv %s"%(vp,))
+		self.log("env", py, vp)
+		self.out("%s -m venv %s"%(py, vp))
 
 	def deps(self):
 		deps = self.config.deps
@@ -29,23 +30,38 @@ class Builder(Basic):
 		for dep in deps:
 			self.install(dep)
 
-	def install(self, package):
-		self.log("install", package)
-		path = self.config.path
-		pipper = path.pip
-		if type(package) is str:
-			return self.out("%s install %s"%(pipper, package))
-		# git installation
+	def clone(self, package):
+		self.log("clone", package)
 		gp = package["git"]
 		pjoin = os.path.join
 		gdir = gp.split("/").pop()
-		os.chdir(path.base)
+		os.chdir(self.config.path.base)
 		self.out("git clone https://github.com/%s.git"%(gp,))
-		self.out("ln -s %s"%(pjoin(gdir, package["sym"]),))
+		sym = package.get("sym")
+		sym and self.out("ln -s %s"%(pjoin(gdir, sym),))
 		os.chdir(pjoin("..", ".."))
-		self.out("%s install -r %s"%(pipper, pjoin(path.base, gdir, package["requirements"])))
+		return gdir
 
-	def register(self, func, port):
+	def req(self, req, rfile=False):
+		if rfile:
+			req = "-r %s"%(req,)
+		self.out("%s install %s"%(self.config.path.pip, req))
+
+	def reqs(self, reqfile="requirements.txt", gdir=None):
+		self.log("reqs", reqfile, gdir)
+		if gdir:
+			reqfile = os.path.join(self.config.path.base, gdir, reqfile)
+		self.req(reqfile, True)
+
+	def install(self, package):
+		self.log("install", package)
+		if type(package) is str:
+			return self.req(package, package.endswith(".txt"))
+		gdir = package.get("git") and self.clone(package)
+		reqs = package.get("requirements")
+		reqs and self.reqs(reqs, gdir)
+
+	def register(self, func, port, withpath=False):
 		cfg = self.config
 		fsrc = inspect.getsource(func)
 		name = fsrc.split(" ", 1).pop(1).split("(", 1).pop(0)
@@ -55,6 +71,7 @@ class Builder(Basic):
 		self.log("register", name, rp)
 		codestring = (cfg.persistent and PTMP or RTMP)%(fsrc, caller)
 		if cfg.persistent:
+			codestring = codestring.replace("WITHPATH", str(withpath))
 			codestring = codestring.replace("PID", str(os.getpid()))
 			codestring = codestring.replace("PORT", str(port))
 		with open(rp, "w") as f:
