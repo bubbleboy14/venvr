@@ -19,7 +19,7 @@ class Runner(Basic):
 
 	def run(self, fname, *args, **kwargs):
 		cfg = self.config
-		self.log("run", *args, **kwargs)
+		self.log("run", *args, kwargs)
 		if cfg.persistent:
 			self.log("persistent (via post)")
 			resp = requests.post("http://localhost:%s/"%(cfg.registered[fname],), json={
