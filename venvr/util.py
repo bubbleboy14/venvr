@@ -1,9 +1,9 @@
 import os, sys
-from fyg.util import Named
+from fyg.util import Named, basiclog
 from subprocess import getoutput, call
 
 def log(*msg):
-	print("venvr", *msg)
+	basiclog("venvr", *msg)
 
 def err(*msg):
 	log("error!", *msg)
