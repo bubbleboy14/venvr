@@ -13,7 +13,7 @@ setup(
     ],
     zip_safe = False,
     install_requires = [
-        "fyg >= 0.1.6"
+        "fyg >= 0.1.7.2"
     ],
     entry_points = '''
         [console_scripts]
