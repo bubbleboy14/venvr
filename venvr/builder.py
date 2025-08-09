@@ -42,9 +42,11 @@ class Builder(Basic):
 		os.chdir(pjoin("..", ".."))
 		return gdir
 
-	def req(self, req, rfile=False):
+	def req(self, req, rfile=False, upgrade=False):
 		if rfile:
 			req = "-r %s"%(req,)
+		if upgrade:
+			req = "-U %s"%(req,)
 		self.out("%s install %s"%(self.config.path.pip, req))
 
 	def reqs(self, reqfile="requirements.txt", gdir=None):
@@ -53,10 +55,10 @@ class Builder(Basic):
 			reqfile = os.path.join(self.config.path.base, gdir, reqfile)
 		self.req(reqfile, True)
 
-	def install(self, package):
+	def install(self, package, upgrade=False):
 		self.log("install", package)
 		if type(package) is str:
-			return self.req(package, package.endswith(".txt"))
+			return self.req(package, package.endswith(".txt"), upgrade)
 		gdir = package.get("git") and self.clone(package)
 		reqs = package.get("requirements")
 		reqs and self.reqs(reqs, gdir)

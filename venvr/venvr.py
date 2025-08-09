@@ -20,8 +20,8 @@ def run(envname, deps, func, *args, **kwargs):
 def call(envname, func, *args, **kwargs):
 	return getagent(envname, persistent=False).run(func, *args, **kwargs)
 
-def install(envname, pname):
-	getagent(envname).builder.install(pname)
+def install(envname, pname, upgrade=False):
+	getagent(envname).builder.install(pname, upgrade)
 
 def profile(envname=None):
 	(envname and getagent(envname) or getman()).profile()
