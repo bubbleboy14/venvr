@@ -6,4 +6,4 @@ from .manager import Manager
 from .venvr import call, install, profile, run, getagent, getman
 from .cli import invoke
 
-__version__ = "0.1.5.3"
+__version__ = "0.1.5.4"
