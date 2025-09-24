@@ -10,7 +10,7 @@ from subprocess import getoutput
 from dez.http.application import HTTPApplication
 
 def log(*msgs):
-	print("venvr bridge", *msgs)
+	print("venvr bridge", *msgs, flush=True)
 	with open("venvr.log", "a") as f:
 		f.write(" ".join([str(m) for m in msgs]) + "\\n")
 
