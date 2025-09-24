@@ -1,4 +1,4 @@
-import requests
+import requests, json
 from .util import Basic
 
 class Runner(Basic):
@@ -26,6 +26,10 @@ class Runner(Basic):
 				"args": args,
 				"kwargs": kwargs
 			}).content.decode()
+			try:
+				resp = json.loads(resp)
+			except:
+				pass
 			self.log(resp)
 			return resp
 		else:
