@@ -46,9 +46,9 @@ class Agent(Basic):
 			sleep(1)
 		return self.runner.run(fname, *args, **kwargs)
 
-	def register(self, func, withpath=False):
+	def register(self, func, withpath=False, loggy=False):
 		port = self.getport()
-		name = self.builder.register(func, port, withpath)
+		name = self.builder.register(func, port, withpath, loggy)
 		self.log("registered", name, port)
 		self.config.registered.update(name, port)
 		return name

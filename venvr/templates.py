@@ -35,6 +35,10 @@ if WITHPATH:
 	log("adding", callerpath, "to path")
 	sys.path.insert(0, callerpath)
 
+if LOGGY:
+	from dez.logging import logson
+	logson()
+
 app = HTTPApplication("", PORT)
 app.add_cb_rule("/", call)
 rel.timeout(5, pcheck)

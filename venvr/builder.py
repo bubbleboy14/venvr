@@ -63,7 +63,7 @@ class Builder(Basic):
 		reqs = package.get("requirements")
 		reqs and self.reqs(reqs, gdir)
 
-	def register(self, func, port, withpath=False):
+	def register(self, func, port, withpath=False, loggy=False):
 		cfg = self.config
 		fsrc = inspect.getsource(func)
 		name = fsrc.split(" ", 1).pop(1).split("(", 1).pop(0)
@@ -73,6 +73,7 @@ class Builder(Basic):
 		self.log("register", name, rp)
 		codestring = (cfg.persistent and PTMP or RTMP)%(fsrc, caller)
 		if cfg.persistent:
+			codestring = codestring.replace("LOGGY", str(loggy))
 			codestring = codestring.replace("WITHPATH", str(withpath))
 			codestring = codestring.replace("PID", str(os.getpid()))
 			codestring = codestring.replace("PORT", str(port))
