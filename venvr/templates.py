@@ -36,10 +36,14 @@ if WITHPATH:
 	sys.path.insert(0, callerpath)
 
 if LOGGY:
-	from dez.logging import logson
-	logson()
+	from fyg.util import log as flog
+	from dez.logging import get_logger_getter
+	logger_getter = get_logger_getter("venvr", flog,
+		["access", "info", "log", "warn", "debug", "error", "detail"])
+	app = HTTPApplication("", PORT, logger_getter)
+else:
+	app = HTTPApplication("", PORT)
 
-app = HTTPApplication("", PORT)
 app.add_cb_rule("/", call)
 rel.timeout(5, pcheck)
 log("starting")
