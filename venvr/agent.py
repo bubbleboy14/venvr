@@ -4,6 +4,7 @@ from fyg import Config
 from .util import Basic
 from .runner import Runner
 from .builder import Builder
+from .config import config
 
 class Agent(Basic):
 	def __init__(self, name, vstore, deps=[], py="python3", persistent=True, port=None):
@@ -42,8 +43,8 @@ class Agent(Basic):
 		self.log("run", fname, args, kwargs)
 		if self.config.persistent and not self.config.running[fname]:
 			self.start(fname)
-			self.log("waiting 1 sec for initialization")
-			sleep(1)
+			self.log("waiting %s sec for initialization"%(config.startwait,))
+			sleep(config.startwait)
 		return self.runner.run(fname, *args, **kwargs)
 
 	def register(self, func, withpath=False, loggy=False):
