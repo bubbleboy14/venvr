@@ -1,5 +1,6 @@
 import requests, json
 from .util import Basic
+from .config import config
 
 class Runner(Basic):
 	def __init__(self, name, config):
@@ -19,13 +20,22 @@ class Runner(Basic):
 
 	def run(self, fname, *args, **kwargs):
 		cfg = self.config
+		rcfg = config.request
 		self.log("run", *args, kwargs)
 		if cfg.persistent:
 			self.log("persistent (via post)")
-			resp = requests.post("http://localhost:%s/"%(cfg.registered[fname],), json={
-				"args": args,
-				"kwargs": kwargs
-			}).content.decode()
+			for attempt in range(rcfg.retry):
+				try:
+					resp = requests.post("http://localhost:%s/"%(cfg.registered[fname],), json={
+						"args": args,
+						"kwargs": kwargs
+					}, timeout=(rcfg.connect, rcfg.read)).content.decode()
+					break
+				except Exception, e:
+					tries = attempt + 1
+					self.log("run request", tries, "failed with", str(e))
+					if tries == rcfg.retry:
+						raise e
 			try:
 				resp = json.loads(resp)
 			except:
