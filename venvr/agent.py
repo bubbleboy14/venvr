@@ -44,7 +44,7 @@ class Agent(Basic):
 		if self.config.persistent and not self.config.running[fname]:
 			self.start(fname)
 			self.log("waiting %s sec for initialization"%(config.startwait,))
-			sleep(config.startwait)
+			sleep(config.request.wait)
 		return self.runner.run(fname, *args, **kwargs)
 
 	def register(self, func, withpath=False, loggy=False):
