@@ -7,7 +7,12 @@ config = Config({
 		"start": 17000
 	},
 	"vstore": "venvrs",
-	"startwait": 2
+	"request": {
+		"wait": 2,
+		"retry": 3,
+		"read": 600,
+		"connect": 6
+	}
 })
 
 def getPortBlock():
