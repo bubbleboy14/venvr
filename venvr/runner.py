@@ -31,7 +31,7 @@ class Runner(Basic):
 						"kwargs": kwargs
 					}, timeout=(rcfg.connect, rcfg.read)).content.decode()
 					break
-				except Exception, e:
+				except Exception as e:
 					tries = attempt + 1
 					self.log("run request", tries, "failed with", str(e))
 					if tries == rcfg.retry:
