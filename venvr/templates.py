@@ -36,6 +36,7 @@ if WITHPATH:
 	sys.path.insert(0, callerpath)
 
 if LOGGY:
+	rel.set_verbose(True)
 	from fyg.util import log as flog
 	from dez.logging import get_logger_getter
 	logger_getter = get_logger_getter("venvr", flog,
