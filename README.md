@@ -2,4 +2,4 @@
 
 Virtual ENVironment manageR
 
-v0.1.5.7
+v0.1.5.8
