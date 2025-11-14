@@ -1,6 +1,7 @@
 import os, inspect
 from .util import Basic
 from .templates import RTMP, PTMP
+from .config import config
 
 class Builder(Basic):
 	def __init__(self, name, config):
@@ -74,6 +75,7 @@ class Builder(Basic):
 		codestring = (cfg.persistent and PTMP or RTMP)%(fsrc, caller)
 		if cfg.persistent:
 			codestring = codestring.replace("LOGGY", str(loggy))
+			codestring = codestring.replace("WITHPAUSE", str(config.request.withpause))
 			codestring = codestring.replace("WITHPATH", str(withpath))
 			codestring = codestring.replace("PID", str(os.getpid()))
 			codestring = codestring.replace("PORT", str(port))

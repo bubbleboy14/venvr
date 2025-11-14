@@ -11,7 +11,8 @@ config = Config({
 		"wait": 2,
 		"retry": 3,
 		"read": 600,
-		"connect": 6
+		"connect": 6,
+		"withpause": False
 	}
 })
 

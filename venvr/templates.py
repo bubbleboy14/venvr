@@ -20,8 +20,14 @@ caller = %s
 def call(req):
 	d = json.loads(req.body)
 	log("calling with", d["args"], d["kwargs"])
+	if WITHPAUSE:
+		log("rel pause")
+		rel.pause()
 	resp = caller(*d["args"], **d["kwargs"])
 	app.daemon.respond(req, resp)
+	if WITHPAUSE:
+		log("rel resume")
+		rel.resume()
 
 def pcheck():
 	if not getoutput("ps -ef | grep PID | grep -v grep"):
